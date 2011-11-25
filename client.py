@@ -37,12 +37,16 @@ def prepare_serie(name, snum, enum, subtitle=None, quality=None):
     return serie
 
 class CanapeClient(ConsoleApp):
+
+    prompt = "\x1b[1m\x1b[35mCanape>\x1b[0m "
+
     def __init__(self):
         ConsoleApp.__init__(self)
         self.server = xmlrpclib.ServerProxy('http://localhost:8080', allow_none=True)
 
     @command('ls','list')
     def get_series(self, arg):
+        """ List series from database """
         try:
             results = self.server.get_series()
         except socket.error:
@@ -61,6 +65,8 @@ class CanapeClient(ConsoleApp):
              make_option("--quality", action="store", type="string", dest="quality", default=None)
             ])
     def add_serie(self, arg, opts):
+        """ Add a serie to the database, you must specify serie's name,
+        and episode's number and season from wich you want to start download """
         if None in (opts.name, opts.snum, opts.enum):
             print "You need specify  name snum and enum"
             return False
@@ -76,6 +82,7 @@ class CanapeClient(ConsoleApp):
     @option([make_option("-n", "--name", action="store", type="string", dest="name"),
             ])
     def rm_serie(self, arg, opts):
+        """ Remove a serie from the database, you must specify serie's name"""
         serie = Serie(opts.name)
         try:
             results = self.server.del_serie(serie)
