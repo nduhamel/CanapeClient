@@ -16,6 +16,7 @@
 import cmd
 import optparse
 import functools
+import shlex
 
 import os
 import atexit
@@ -66,7 +67,7 @@ def option(option_list, arg_desc="arg"):
         @functools.wraps(func)
         def new_func(instance, arg):
             try:
-                opts, newArgList = parser.parse_args(arg.split())
+                opts, newArgList = parser.parse_args(shlex.split(arg))
 
 
             except (optparse.OptionValueError, optparse.BadOptionError,
